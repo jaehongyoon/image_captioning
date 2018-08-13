@@ -1,9 +1,9 @@
 import os
 import numpy as np
+import matplotlib.pyplot as plt
 import pandas as pd
 import tensorflow as tf
-import matplotlib.pyplot as plt
-import cPickle as pickle
+import _pickle as pickle
 import copy
 import json
 from tqdm import tqdm
@@ -56,10 +56,15 @@ class BaseModel(object):
                 train_writer.add_summary(summary, global_step)
             train_data.reset()
 
+                    
+        self.save()
+        train_writer.close()
+        print("Training complete.")
+        
         # additional saving script to save model to .pb format
         # later retreived in cpp
         signature = tf.saved_model.signature_def_utils.predict_signature_def(                                               inputs={'image': self.image}, 
-                                        outputs={'scores': self.output}) 
+                                        outputs={'scores': self.sentences}) 
         builder = tf.saved_model.builder.SavedModelBuilder('/tmp/my_saved_model') 
         builder.add_meta_graph_and_variables(
             sess=sess,
@@ -68,10 +73,6 @@ class BaseModel(object):
               tf.saved_model.signature_constants.DEFAULT_SERVING_SIGNATURE_DEF_KEY:signature
             })
         builder.save()
-            
-        self.save()
-        train_writer.close()
-        print("Training complete.")
 
     def eval(self, sess, eval_gt_coco, eval_data, vocabulary):
         """ Evaluate the model using the COCO val2014 data. """
