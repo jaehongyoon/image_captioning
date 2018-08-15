@@ -22,7 +22,7 @@ The code was generated and compiled on Ubuntu 14.0.
 ```shell
 make
 ```
-You will get _**server_ _**cliend_
+You will get _**server**_ and _**client**_
 
 The grpc applications (server/client) can be compliled using make file. On command prompt type "make." You will get "server" and "client" which are gRPC server and CLI test client. Run the server and client on command prompt and follow the instructions.
 
