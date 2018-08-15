@@ -27,7 +27,9 @@ class CaptionGenerator(BaseModel):
 
         images = tf.placeholder(
             dtype = tf.float32,
-            shape = [config.batch_size] + self.image_shape)
+            shape = [config.batch_size] + self.image_shape,
+            name = 'image'
+        )
 
         conv1_1_feats = self.nn.conv2d(images, 64, name = 'conv1_1')
         conv1_2_feats = self.nn.conv2d(conv1_1_feats, 64, name = 'conv1_2')
@@ -65,7 +67,9 @@ class CaptionGenerator(BaseModel):
 
         images = tf.placeholder(
             dtype = tf.float32,
-            shape = [config.batch_size] + self.image_shape)
+            shape = [config.batch_size] + self.image_shape,
+            name = 'image'
+        )
 
         conv1_feats = self.nn.conv2d(images,
                                   filters = 64,
