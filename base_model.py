@@ -60,19 +60,7 @@ class BaseModel(object):
         self.save()
         train_writer.close()
         print("Training complete.")
-        
-        # additional saving script to save model to .pb format
-        # later retreived in cpp
-        signature = tf.saved_model.signature_def_utils.predict_signature_def(                                               inputs={'image': tf.get_default_graph().get_tensor_by_name("image:0")}, 
-                                        outputs={'prob': tf.get_default_graph().get_tensor_by_name('fc_2:0')}) 
-        builder = tf.saved_model.builder.SavedModelBuilder('/tmp/my_saved_model') 
-        builder.add_meta_graph_and_variables(
-            sess=sess,
-            tags=[tf.saved_model.tag_constants.SERVING],
-            signature_def_map={
-              tf.saved_model.signature_constants.DEFAULT_SERVING_SIGNATURE_DEF_KEY:signature
-            })
-        builder.save()
+
 
     def eval(self, sess, eval_gt_coco, eval_data, vocabulary):
         """ Evaluate the model using the COCO val2014 data. """
