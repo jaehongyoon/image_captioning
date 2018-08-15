@@ -70,6 +70,9 @@ def cpp_caption():
     config = Config()
     
     config.test_image_dir = '../buffer/'
+    config.train_cnn = False
+    config.phase = 'test'
+    config.beam_size = 100
     
     data, vocabulary = prepare_test_data(config)
     model = CaptionGenerator(config)
