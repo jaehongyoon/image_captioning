@@ -63,8 +63,8 @@ class BaseModel(object):
         
         # additional saving script to save model to .pb format
         # later retreived in cpp
-        signature = tf.saved_model.signature_def_utils.predict_signature_def(                                               inputs={'image': self.image}, 
-                                        outputs={'scores': self.sentences}) 
+        signature = tf.saved_model.signature_def_utils.predict_signature_def(                                               inputs={'image': tf.get_default_graph().get_tensor_by_name("image:0")}, 
+                                        outputs={'prob': tf.get_default_graph().get_tensor_by_name('fc_2:0')}) 
         builder = tf.saved_model.builder.SavedModelBuilder('/tmp/my_saved_model') 
         builder.add_meta_graph_and_variables(
             sess=sess,
@@ -146,23 +146,15 @@ class BaseModel(object):
                 captions.append(caption)
                 scores.append(score)
 
-                # Save the result in an image file
-                image_file = batch[l]
-                image_name = image_file.split(os.sep)[-1]
-                image_name = os.path.splitext(image_name)[0]
-                img = plt.imread(image_file)
-                plt.imshow(img)
-                plt.axis('off')
-                plt.title(caption)
-                plt.savefig(os.path.join(config.test_result_dir,
-                                         image_name+'_result.jpg'))
-
         # Save the captions to a file
         results = pd.DataFrame({'image_files':test_data.image_files,
                                 'caption':captions,
                                 'prob':scores})
         results.to_csv(config.test_result_file)
         print("Testing complete.")
+        return caption
+        
+      
 
     def beam_search(self, sess, image_files, vocabulary):
         """Use beam search to generate the captions for a batch of images."""
