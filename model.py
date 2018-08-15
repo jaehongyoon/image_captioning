@@ -201,7 +201,9 @@ class CaptionGenerator(BaseModel):
             contexts = self.conv_feats
             sentences = tf.placeholder(
                 dtype = tf.int32,
-                shape = [config.batch_size, config.max_caption_length])
+                shape = [config.batch_size, config.max_caption_length],
+                name = 'sentence'
+            )
             masks = tf.placeholder(
                 dtype = tf.float32,
                 shape = [config.batch_size, config.max_caption_length])
