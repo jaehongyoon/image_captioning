@@ -63,7 +63,24 @@ def main(argv):
             model = CaptionGenerator(config)
             model.load(sess, FLAGS.model_file)
             tf.get_default_graph().finalize()
-            model.test(sess, data, vocabulary)
+            caption = model.test(sess, data, vocabulary)
+            
+# for C++ caption generation access this module function
+def cpp_caption():
+    config = Config()
+    
+    config.test_image_dir = '../buffer/'
+    config.train_cnn = False
+    config.phase = 'test'
+    config.beam_size = 100
+    
+    data, vocabulary = prepare_test_data(config)
+    model = CaptionGenerator(config)
+    model.load(sess, FLAGS.model_file)
+    tf.get_default_graph().finalize()
+    caption = model.test(sess, data, vocabulary)
+    
+    return caption
 
 if __name__ == '__main__':
     tf.app.run()
